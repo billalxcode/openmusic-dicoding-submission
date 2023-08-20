@@ -1,0 +1,26 @@
+{
+  "name": "openmusicv1",
+  "version": "1.0.0",
+  "description": "Open Music Dicoding Submission",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start-prod": "node ./server.js",
+    "start-dev": "nodemon ./server.js",
+    "lint": "eslint .",
+    "migrate": "node-pg-migrate"
+  },
+  "keywords": [
+    "music"
+  ],
+  "author": "Billal Fauzan",
+  "license": "MIT",
+  "dependencies": {
+    "@hapi/hapi": "^21.3.2",
+    "dotenv": "^16.3.1",
+    "joi": "^17.9.2",
+    "nanoid": "^4.0.2",
+    "node-pg-migrate": "^6.2.2",
+    "pg": "^8.11.3"
+  }
+}
