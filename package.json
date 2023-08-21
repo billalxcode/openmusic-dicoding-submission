@@ -2,7 +2,7 @@
   "name": "openmusicv1",
   "version": "1.0.0",
   "description": "Open Music Dicoding Submission",
-  "main": "app.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "start-prod": "node ./server.js",
@@ -21,6 +21,7 @@
     "joi": "^17.9.2",
     "nanoid": "^4.0.2",
     "node-pg-migrate": "^6.2.2",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "ts-node": "^10.9.1"
   }
 }

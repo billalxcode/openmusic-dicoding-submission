@@ -1,8 +1,8 @@
 import "dotenv/config.js"
 import Hapi from "@hapi/hapi"
-import AlbumsMemory from "./src/services/memory/album.js"
 import album from "./src/api/album/index.js"
 import AlbumValidator from "./src/validator/album/index.js"
+import AlbumService from "./src/services/postgres/album.js"
 
 class App {
     constructor() {
@@ -16,7 +16,7 @@ class App {
             }
         })
 
-        this.albumService = new AlbumsMemory()
+        this.albumService = new AlbumService()
     }
 
     async registerPlugins() {
