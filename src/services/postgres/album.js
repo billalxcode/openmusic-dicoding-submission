@@ -1,26 +1,25 @@
 import { nanoid } from "nanoid";
-import { Pool } from "pg";
+import Postgress from "pg";
 import InvariantError from "../../exceptions/InvariantError.js";
 import NotFoundError from "../../exceptions/NotFoundError.js";
+import AlbumModel from "../../model/album.js";
+const { Pool } = Postgress
 
 export default class AlbumService {
     constructor() {
         this._pool = new Pool()
+        
         this._model = new AlbumModel()
     }
 
     async addAlbum({ name, year }) {
         const albumId = nanoid(16)
-        const createdAt = new Date().toISOString()
-        const updatedAt = createdAt
         const query = {
-            text: "INSERT INTO albums VALUES ($1, $2, $3, $4, $5) RETURNING id",
+            text: "INSERT INTO albums VALUES ($1, $2, $3) RETURNING id",
             values: [
                 "album-" + albumId,
                 name,
-                year,
-                createdAt,
-                updatedAt
+                year
             ]
         }
 
@@ -36,7 +35,7 @@ export default class AlbumService {
             text: "SELECT * FROM albums WHERE id = $1",
             values: [albumId]
         })
-        if (!result.rows[0].id) {
+        if (!result.rows.length) {
             throw new NotFoundError("Albums not found")
         }
 

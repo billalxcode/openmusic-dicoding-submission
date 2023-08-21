@@ -1,4 +1,4 @@
-class AlbumModel {
+export default class AlbumModel {
     constructor() {
         this.name = ""
         this.year = 0
