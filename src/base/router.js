@@ -23,6 +23,10 @@ export default class BaseRouter {
         this.append("DELETE", route, handler)
     }
 
+    put(route, handler) {
+        this.append("PUT", route, handler)
+    }
+    
     run() {
         
     }

@@ -13,6 +13,8 @@ export default class AlbumHandler {
 
         this.addAlbum = this.addAlbum.bind(this)
         this.getAlbumById = this.getAlbumById.bind(this)
+        this.editAlbumById = this.editAlbumById.bind(this)
+        this.deleteAlbumById = this.deleteAlbumById.bind(this)
     }
     
     /**
@@ -22,23 +24,16 @@ export default class AlbumHandler {
      * @returns 
      */
     async addAlbum(request, h) {
-        try {
-            this._validator.validate(request.payload)
-            const { name, year } = request.payload
+        this._validator.validate(request.payload)
+        const { name, year } = request.payload
     
-            const result = await this._service.addAlbum({ name, year })
-            return h.response({
-                status: "success",
-                data: {
-                    "albumId": result
-                }
-            }).code(201)
-        } catch (error) {
-            return h.response({
-                status: "fail",
-                message: error.message
-            }).code(400)
-        }
+        const result = await this._service.addAlbum({ name, year })
+        return h.response({
+            status: "success",
+            data: {
+                "albumId": result
+            }
+        }).code(201)
     }
 
     /**
@@ -48,19 +43,41 @@ export default class AlbumHandler {
      */
     async getAlbumById(request, h) {
         const { albumId } = request.params
-        try {
-            const album = await this._service.getAlbumById({albumId})
-            return h.response({
-                status: "success",
-                data: {
-                    album
-                }
-            }).code(200)
-        } catch (err) {
-            return h.response({
-                status: "fail",
-                message: err.message
-            })
-        }
+        const album = await this._service.getAlbumById({albumId})
+        return h.response({
+            status: "success",
+            data: {
+                album
+            }
+        }).code(200)
+    }
+
+    /**
+     * 
+     * @param {Hapi.Request} request 
+     * @param {Hapi.ResponseToolkit} h 
+     */
+    async editAlbumById(request, h) {
+        const { albumId } = request.params
+        const { name, year } = this._validator.validate(request.payload)
+        await this._service.editAlbumByid(albumId, { name, year })
+        return h.response({
+            status: "success",
+            message: "successfully edit album with id " + albumId
+        })
+    }
+
+    /**
+     * 
+     * @param {Hapi.Request} request 
+     * @param {Hapi.ResponseToolkit} h 
+     */
+    async deleteAlbumById(request, h) {
+        const { albumId } = request.params
+        await this._service.deleteAlbumByid(albumId)
+        return h.response({
+            status: "success",
+            message: "successfully to delete album"
+        })
     }
 }
