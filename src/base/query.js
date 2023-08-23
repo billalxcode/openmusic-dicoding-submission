@@ -1,5 +1,5 @@
 export default class BaseQuery {
-    constructor(text, values) {
+    constructor(text, values = []) {
         this.text = text
         this.values = values
     }

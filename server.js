@@ -1,10 +1,13 @@
 import "dotenv/config.js"
 import Hapi from "@hapi/hapi"
+import song from "./src/api/song/index.js"
 import album from "./src/api/album/index.js"
 import AlbumValidator from "./src/validator/album/index.js"
 import AlbumService from "./src/services/postgres/album.js"
 import ClientError from "./src/exceptions/ClientError.js"
 import NotFoundError from "./src/exceptions/NotFoundError.js"
+import SongService from "./src/services/postgres/song.js"
+import SongValidator from "./src/validator/song/index.js"
 
 class EventHandler {
     /**
@@ -14,7 +17,7 @@ class EventHandler {
      */
     preResponse(request, h) {
         const { response } = request
-        console.log(response)
+
         if (response instanceof Error) {
             if (response instanceof NotFoundError) {
                 return h.response({
@@ -44,6 +47,7 @@ class EventHandler {
 
 class App {
     constructor() {
+        console.clear()
         this.eventHandler = new EventHandler()
 
         this.server = Hapi.server({
@@ -57,6 +61,7 @@ class App {
         })
 
         this.albumService = new AlbumService()
+        this.songService = new SongService()
     }
 
     async registerPlugins() {
@@ -65,6 +70,14 @@ class App {
             options: {
                 service: this.albumService,
                 validator: new AlbumValidator()
+            }
+        })
+
+        await this.server.register({
+            plugin: song,
+            options: {
+                service: this.songService,
+                validator: new SongValidator()
             }
         })
     }

@@ -45,7 +45,6 @@ export default class AlbumService {
 
     async editAlbumByid(albumId, { name, year }) {
         const updatedAt = new Date().toISOString()
-        console.log(updatedAt)
         const query = {
             text: 'UPDATE albums SET name = $1, year = $2 WHERE id = $3 RETURNING id',
             values: [name, year, albumId],
