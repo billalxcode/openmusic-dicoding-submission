@@ -11,6 +11,7 @@ export default class SongRouter extends BaseRouter {
         this.get("/songs/{songId}", handler.getSongById)
         this.post("/songs", handler.addSong)
         this.put("/songs/{songId}", handler.editSongById)
+        this.delete("/songs/{songId}", handler.deleteSongById)
         return this.router
     }
 }

@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "@hapi/hapi": "^21.3.2",
+    "auto-bind": "^5.0.1",
     "dotenv": "^16.3.1",
     "joi": "^17.9.2",
     "nanoid": "^4.0.2",

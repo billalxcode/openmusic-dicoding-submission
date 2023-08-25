@@ -17,14 +17,14 @@ export default class SongModel {
             genre: data.genre,
             performer: data.performer,
             duration: data.duration,
-            albumId: data.albumId
+            albumId: data.album_id
         }
 
         if ("createdAt" in Object.keys(data)) {
-            tdata["createdAt"] = data.createdAt
+            tdata["createdAt"] = data.created_at
         }
         if ("updatedAt" in Object.keys(data)) {
-            tdata["updatedAt"] = data.updatedAt
+            tdata["updatedAt"] = data.updated_at
         }
         
         return tdata

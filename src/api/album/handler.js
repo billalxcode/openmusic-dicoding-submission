@@ -1,6 +1,7 @@
 import Hapi from "@hapi/hapi"
 import AlbumValidator from "../../validator/album/index.js";
 import AlbumService from "../../services/postgres/album.js";
+import autoBind from "auto-bind";
 export default class AlbumHandler {
     /**
      * 
@@ -11,10 +12,7 @@ export default class AlbumHandler {
         this._service = service
         this._validator = validator
 
-        this.addAlbum = this.addAlbum.bind(this)
-        this.getAlbumById = this.getAlbumById.bind(this)
-        this.editAlbumById = this.editAlbumById.bind(this)
-        this.deleteAlbumById = this.deleteAlbumById.bind(this)
+        autoBind(this)
     }
     
     /**

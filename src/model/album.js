@@ -27,8 +27,27 @@ export default class AlbumModel {
             id: data.id,
             name: data.name,
             year: data.year,
-            createdAt: data.createdAt,
-            updatedAt: data.updatedAt
+            createdAt: data.created_at,
+            updatedAt: data.updated_at
         }
+    }
+
+    mappingSong(data) {
+        return {
+            id: data.id,
+            title: data.title,
+            performer: data.performer
+        }
+    }
+
+    /**
+     * 
+     * @param {Array} albums 
+     * @param {Array} songs 
+     */
+    mappingAlbumAndSong(albums, songs) {
+        let map = albums.map(this.mapping)[0]
+        map["songs"] = songs.map(this.mappingSong)
+        return map
     }
 }

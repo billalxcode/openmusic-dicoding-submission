@@ -1,6 +1,7 @@
 import Hapi from "@hapi/hapi"
 import SongService from "../../services/postgres/song.js"
 import SongValidator from "../../validator/song/index.js"
+import autoBind from "auto-bind"
 
 export default class SongHandler {
     /**
@@ -11,10 +12,7 @@ export default class SongHandler {
         this._service = service
         this._validator = validator
 
-        this.addSong = this.addSong.bind(this)
-        this.getAllSongs = this.getAllSongs.bind(this)
-        this.getSongById = this.getSongById.bind(this)
-        this.editSongById = this.editSongById.bind(this)
+        autoBind(this)
     }
 
     /**
@@ -41,7 +39,9 @@ export default class SongHandler {
      * @param {Hapi.ResponseToolkit} h 
      */
     async getAllSongs(request, h) {
-        const songs = await this._service.getSongs()
+        const query = this._validator.validate(request.query, "query")
+        
+        const songs = await this._service.getSongs(query)
 
         return h.response({
             status: "success",
@@ -79,6 +79,21 @@ export default class SongHandler {
         return h.response({
             status: "success",
             message: "successfully to update song"
+        })
+    }
+
+    /**
+     * 
+     * @param {Hapi.Request} request 
+     * @param {Hapi.ResponseToolkit} h 
+     */
+    async deleteSongById(request, h) {
+        const { songId } = request.params
+
+        await this._service.deleteSongById(songId)
+        return h.response({
+            status: "success",
+            message: "song has been deleted"
         })
     }
 }

@@ -32,15 +32,21 @@ export default class AlbumService {
     }
 
     async getAlbumById({ albumId }) {
-        const result = await this._pool.query({
+        const resultAlbum = await this._pool.query({
             text: "SELECT * FROM albums WHERE id = $1",
             values: [albumId]
         })
-        if (!result.rows.length) {
+        if (!resultAlbum.rows.length) {
             throw new NotFoundError("Albums not found")
         }
 
-        return result.rows.map(this._model.mapping)[0]
+        const querySong = new BaseQuery(
+            "SELECT songs.id, songs.title, songs.performer FROM albums JOIN songs ON albums.id = songs.album_id WHERE albums.id = $1",
+            [albumId]
+        )
+        const resultSong = await this._pool.query(querySong)
+        // return result.rows.map(this._model.mapping)[0]
+        return this._model.mappingAlbumAndSong(resultAlbum.rows, resultSong.rows)
     }
 
     async editAlbumByid(albumId, { name, year }) {

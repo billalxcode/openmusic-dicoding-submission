@@ -28,19 +28,19 @@ exports.up = pgm => {
             type: "integer",
             notNull: false
         },
-        albumId: {
+        album_id: {
             type: "varchar(255)",
             references: "albums",
             onUpdate: "cascade",
             onDelete: "cascade",
             notNUll: false
         },
-        createdAt: {
+        created_at: {
             type: "timestamp",
             notNull: true,
             default: pgm.func("current_timestamp")
         },
-        updatedAt: {
+        updated_at: {
             type: "timestamp",
             notNull: true,
             default: pgm.func("current_timestamp")
