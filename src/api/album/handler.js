@@ -20,10 +20,8 @@ class AlbumHandler {
      * @returns
      */
     async postAlbumHandler(request, h) {
-        console.log("post album handler")
         this._validator.validateAlbumPayload(request.payload)
         const { name, year } = request.payload
-        console.log("validator")
 
         const albumId = await this._service.addAlbum({ name, year })
 
