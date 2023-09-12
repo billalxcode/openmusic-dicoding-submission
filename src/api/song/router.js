@@ -8,7 +8,8 @@ class SongRouter extends BaseRouter {
      */
     run(handler) {
         this.post("/songs", (r, h) => handler.postSongHandler(r, h))
-
+        this.get("/songs", (r, h) => handler.getSongsHandler(r, h))
+        this.get("/songs/{songId}", (r, h) => handler.getSongById(r, h))
         return this.router
     }
 }

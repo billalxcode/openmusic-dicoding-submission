@@ -4,6 +4,9 @@ const album = require("./src/api/album")
 const AlbumService = require("./src/service/postgresql/album")
 const AlbumValidator = require("./src/validator/album")
 const ClientError = require("./src/exceptions/ClientError")
+const song = require("./src/api/song")
+const SongService = require("./src/service/postgresql/song")
+const SongValidator = require("./src/validator/song")
 
 class App {
     constructor() {
@@ -27,6 +30,13 @@ class App {
                 options: {
                     service: new AlbumService(),
                     validator: new AlbumValidator()
+                }
+            },
+            {
+                plugin: song,
+                options: {
+                    service: new SongService(),
+                    validator: new SongValidator()
                 }
             }
         ]
