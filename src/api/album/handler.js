@@ -52,6 +52,42 @@ class AlbumHandler {
             }
         })
     }
+
+    /**
+     * 
+     * @param {Hapi.Request} request 
+     * @param {Hapi.ResponseToolkit} h 
+     */
+    async editSongHandler(request, h) {
+        const validatedAlbumPayload = this._validator.validateAlbumPayload(request.payload)
+        const { albumId = "" } = request.params
+
+        await this._service.editAlbumById(albumId, validatedAlbumPayload)
+
+        const response = h.response({
+            status: "success",
+            message: "album berhasil diperbaharui"
+        })
+        return response
+    }
+
+    /**
+     * 
+     * @param {Hapi.Request} request 
+     * @param {Hapi.ResponseToolkit} h 
+     * @returns 
+     */
+    async deleteAlbumHandler(request, h) {
+        const { albumId = "" } = request.params
+
+        await this._service.deleteAlbumById(albumId)
+
+        const response = h.response({
+            status: "success",
+            message: "album berhasil dihapus"
+        })
+        return response
+    }
 }
 
 module.exports = AlbumHandler

@@ -22,7 +22,8 @@ class AlbumModel {
      * @param {Array} songs
      */
     mappingAlbumAndSong(albums, songs) {
-        let results = albums.map(this.mappingSong)[0]
+        let results = albums.map(this.mappingAlbum)[0]
+        
         results["songs"] = songs.map(this.mappingSong)
 
         return results

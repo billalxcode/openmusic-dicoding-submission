@@ -34,7 +34,7 @@ class AlbumService {
         return result.rows[0].id
     }
 
-    async getAlbumById({ albumId }) {
+    async getAlbumById(albumId) {
         const query = new BaseQuery(
             'SELECT * FROM albums WHERE id = $1',
             [
@@ -55,6 +55,35 @@ class AlbumService {
         )
         const reusltSong = await this._pool.query(querySong)
         return this._model.mappingAlbumAndSong(resultAlbum.rows, reusltSong.rows)
+    }
+
+    async editAlbumById(albumId, { name, year }) {
+        const updatedAt = new Date().toISOString()
+
+        const query = new BaseQuery(
+            "UPDATE albums SET name = $1, year = $2 WHERE id = $3 RETURNING id",
+            [
+                name, year, albumId
+            ]
+        )
+        const results = await this._pool.query(query.raw())
+        if (!results.rows.length) {
+            throw new NotFoundError("gagal memperbaharui album, id tidak ditemukan")
+        }
+        return results.rows
+    }
+
+    async deleteAlbumById(albumId) {
+        const query = new BaseQuery(
+            "DELETE FROM albums WHERE id = $1 RETURNING id",
+            [
+                albumId
+            ]
+        )
+        const result = await this._pool.query(query.raw())
+        if (!result.rows.length) {
+            throw new NotFoundError("album gagal dihapus, id tidak ditemukan")
+        }
     }
 }
 
