@@ -1,12 +1,14 @@
 require("dotenv/config")
 const Hapi = require("@hapi/hapi")
 const album = require("./src/api/album")
+const song = require("./src/api/song")
+const users = require("./src/api/users")
 const AlbumService = require("./src/service/postgresql/album")
 const AlbumValidator = require("./src/validator/album")
 const ClientError = require("./src/exceptions/ClientError")
-const song = require("./src/api/song")
 const SongService = require("./src/service/postgresql/song")
 const SongValidator = require("./src/validator/song")
+const UserService = require("./src/service/postgresql/user")
 
 class App {
     constructor() {
@@ -36,6 +38,13 @@ class App {
                 plugin: song,
                 options: {
                     service: new SongService(),
+                    validator: new SongValidator()
+                }
+            },
+            {
+                plugin: users,
+                options: {
+                    service: new UserService(),
                     validator: new SongValidator()
                 }
             }
