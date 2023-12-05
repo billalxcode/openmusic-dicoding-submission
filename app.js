@@ -1,16 +1,29 @@
 require("dotenv/config")
 const Hapi = require("@hapi/hapi")
+
+// all plugins
 const album = require("./src/api/album")
 const song = require("./src/api/song")
 const users = require("./src/api/users")
+const auth = require("./src/api/auth")
+
+// all services
 const AlbumService = require("./src/service/postgresql/album")
-const AlbumValidator = require("./src/validator/album")
-const ClientError = require("./src/exceptions/ClientError")
+const AuthService = require("./src/service/postgresql/authentication")
 const SongService = require("./src/service/postgresql/song")
-const SongValidator = require("./src/validator/song")
 const UserService = require("./src/service/postgresql/user")
+
+// all validators
+const AlbumValidator = require("./src/validator/album")
+const AuthValidator = require("./src/validator/authentication")
+const SongValidator = require("./src/validator/song")
 const UserValidator = require("./src/validator/user")
-const InvariantError = require("./src/exceptions/InvariantError")
+
+// exceptions
+const ClientError = require("./src/exceptions/ClientError")
+
+// tokenize
+const TokenManager = require("./src/tokenize/TokenManager")
 
 class App {
     constructor() {
@@ -48,6 +61,15 @@ class App {
                 options: {
                     service: new UserService(),
                     validator: new UserValidator()
+                }
+            },
+            {
+                plugin: auth,
+                options: {
+                    authService: new AuthService(),
+                    userService: new UserService(),
+                    tokenManager: new TokenManager(),
+                    validator: new AuthValidator()
                 }
             }
         ]
