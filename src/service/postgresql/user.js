@@ -1,8 +1,10 @@
 const { Pool } = require("pg");
+const bcrypt = require("bcryptjs")
 const UserModel = require("../../model/user");
 const { nanoid } = require("nanoid");
 const BaseQuery = require("../../base/query");
 const InvariantError = require("../../exceptions/InvariantError");
+const NotFoundError = require("../../exceptions/NotFoundError");
 
 class UserService {
     constructor() {
@@ -26,14 +28,16 @@ class UserService {
     async addUser({ username, password, fullname }) {
         const created_at = new Date().toISOString()
 
-        this.verifyNewUsername(username)
+        await this.verifyNewUsername(username)
         
+        const hashedPassword = bcrypt.hashSync(password, 10)
+
         const query = new BaseQuery(
             "INSERT INTO users VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
             [
                 'user-' + nanoid(),
                 username,
-                password,
+                hashedPassword,
                 fullname,
                 created_at,
                 created_at
@@ -46,6 +50,20 @@ class UserService {
         }
 
         return result.rows[0].id
+    }
+
+    async getUserById(userId) {
+        const query = new BaseQuery(
+            "SELECT id, username, fullname FROM users WHERE id = $1",
+            [
+                userId
+            ]
+        )
+        const result = await this._pool.query(query.raw())
+        if (!result.rows.length) {
+            throw new NotFoundError("User tidak ditemukan")
+        }
+        return result.rows[0]
     }
 }
 

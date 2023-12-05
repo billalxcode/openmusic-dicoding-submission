@@ -8,7 +8,7 @@ class UserRouter extends BaseRouter {
      */
 
     run(handler) {
-        this.post("/users", handler.postUserHandler)
+        this.post("/users", (r, h) => handler.postUserHandler(r, h))
         return this.router
     }
 }

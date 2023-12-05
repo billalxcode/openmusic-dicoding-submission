@@ -9,6 +9,8 @@ const ClientError = require("./src/exceptions/ClientError")
 const SongService = require("./src/service/postgresql/song")
 const SongValidator = require("./src/validator/song")
 const UserService = require("./src/service/postgresql/user")
+const UserValidator = require("./src/validator/user")
+const InvariantError = require("./src/exceptions/InvariantError")
 
 class App {
     constructor() {
@@ -45,7 +47,7 @@ class App {
                 plugin: users,
                 options: {
                     service: new UserService(),
-                    validator: new SongValidator()
+                    validator: new UserValidator()
                 }
             }
         ]

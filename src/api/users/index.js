@@ -14,10 +14,10 @@ module.exports = {
     register: async (server, options) => {
         const validator = options.validator
         const service = options.service
-
+        
         const handler = new UserHandler(service, validator)
-        const rotuer = new UserRouter()
+        const router = new UserRouter()
 
-        server.route(rotuer.run(handler))
+        server.route(router.run(handler))
     }
 }
