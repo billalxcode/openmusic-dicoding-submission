@@ -1,5 +1,6 @@
 require("dotenv/config")
 const Hapi = require("@hapi/hapi")
+const Jwt = require("@hapi/jwt")
 
 // all plugins
 const album = require("./src/api/album")
@@ -43,6 +44,9 @@ class App {
     async register_plugins() {
         this.plugins = [
             {
+                plugin: Jwt
+            },
+            {
                 plugin: album,
                 options: {
                     service: new AlbumService(),
@@ -79,8 +83,27 @@ class App {
         })
     }
 
+    async register_strategy() {
+        this.server.auth.strategy("openmusic_jwt", "jwt", {
+            keys: process.env.ACCESS_TOKEN_KEY,
+            verify: {
+                aud: false,
+                iss: false,
+                sub: false,
+                maxAgeSec: process.env.ACCESS_TOKEN_AGE
+            },
+            validate: (artifacts) => ({
+                isValid: true,
+                credentials: {
+                    id: artifacts.decoded.payload.id
+                }
+            })
+        })
+    }
+
     async start() {
         await this.register_plugins()
+        await this.register_strategy()
 
         this.server.ext("onPreResponse", (request, h) => {
             const { response } = request
