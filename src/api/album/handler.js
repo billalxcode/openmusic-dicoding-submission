@@ -1,6 +1,7 @@
 const Hapi = require("@hapi/hapi")
 const AlbumService = require("../../service/postgresql/album")
 const AlbumValidator = require("../../validator/album")
+const autoBind = require("auto-bind")
 
 class AlbumHandler {
     /**
@@ -11,6 +12,8 @@ class AlbumHandler {
     constructor(service, validator) {
         this._service = service
         this._validator = validator
+
+        autoBind(this) 
     }
 
     /**

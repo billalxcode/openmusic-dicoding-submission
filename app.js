@@ -25,6 +25,9 @@ const ClientError = require("./src/exceptions/ClientError")
 
 // tokenize
 const TokenManager = require("./src/tokenize/TokenManager")
+const playlist = require("./src/api/playlist")
+const PlaylistService = require("./src/service/postgresql/playlist")
+const PlaylistValidator = require("./src/validator/playlist")
 
 class App {
     constructor() {
@@ -43,9 +46,6 @@ class App {
 
     async register_plugins() {
         this.plugins = [
-            {
-                plugin: Jwt
-            },
             {
                 plugin: album,
                 options: {
@@ -75,6 +75,14 @@ class App {
                     tokenManager: new TokenManager(),
                     validator: new AuthValidator()
                 }
+            },
+            {
+                plugin: playlist,
+                options: {
+                    playlistService: new PlaylistService(),
+                    userService: new UserService(),
+                    validator: new PlaylistValidator()
+                }
             }
         ]
 
@@ -84,6 +92,7 @@ class App {
     }
 
     async register_strategy() {
+        await this.server.register({ plugin: Jwt })
         this.server.auth.strategy("openmusic_jwt", "jwt", {
             keys: process.env.ACCESS_TOKEN_KEY,
             verify: {
@@ -102,8 +111,8 @@ class App {
     }
 
     async start() {
-        await this.register_plugins()
         await this.register_strategy()
+        await this.register_plugins()
 
         this.server.ext("onPreResponse", (request, h) => {
             const { response } = request

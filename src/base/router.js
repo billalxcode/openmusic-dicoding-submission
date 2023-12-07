@@ -1,14 +1,22 @@
 class BaseRouter {
     constructor() {
         this.router = []
+        this.auth = null
     }
 
     append(method, route, handler) {
         this.router.push({
             method: method,
             path: route,
-            handler: handler
+            handler: handler,
+            options: {
+                auth: this.auth
+            }
         })
+    }
+
+    setAuth(name) {
+        this.auth = name
     }
 
     get(route, handler) {

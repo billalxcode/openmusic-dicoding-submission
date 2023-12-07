@@ -2,6 +2,7 @@ const Hapi = require("@hapi/hapi")
 const SongValidator = require("../../validator/song")
 const SongService = require("../../service/postgresql/song")
 const BaseQuery = require("../../base/query")
+const autoBind = require("auto-bind")
 
 class SongHandler {
     /**
@@ -12,6 +13,8 @@ class SongHandler {
     constructor(service, validator) {
         this._service = service
         this._validator = validator
+
+        autoBind(this)
     }
 
     /**

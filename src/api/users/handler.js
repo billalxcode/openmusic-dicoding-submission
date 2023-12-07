@@ -1,6 +1,7 @@
 const Hapi = require("@hapi/hapi")
 const UserService = require("../../service/postgresql/user")
 const UserValidator = require("../../validator/user")
+const autoBind = require("auto-bind")
 
 class UserHandler {
     /**
@@ -11,6 +12,7 @@ class UserHandler {
     constructor(service, validator) {
         this._service = service
         this._validator = validator
+        autoBind(this)
     }
 
     /**

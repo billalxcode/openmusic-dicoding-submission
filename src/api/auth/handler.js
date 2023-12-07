@@ -3,6 +3,7 @@ const AuthService = require("../../service/postgresql/authentication")
 const UserService = require("../../service/postgresql/user")
 const TokenManager = require("../../tokenize/TokenManager")
 const AuthValidator = require("../../validator/authentication")
+const autoBind = require("auto-bind")
 
 class AuthHandler {
     /**
@@ -20,6 +21,8 @@ class AuthHandler {
         this._userService = userService
         this._tokenManager = tokenManager
         this._validator = validator
+        
+        autoBind(this)
     }
 
     /**
