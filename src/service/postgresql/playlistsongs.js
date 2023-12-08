@@ -53,6 +53,20 @@ class PlaylistSongService {
             }
         })
     }
+    
+    async deleteSong(playlistId, songId) {
+        const query = new BaseQuery(
+            "DELETE FROM playlistsongs WHERE song_id = $2 AND playlist_id = $1 RETURNING id",
+            [
+                playlistId, songId
+            ]
+        )
+        const result = await this._pool.query(query.raw())
+        console.log(result.rows)
+        if (!result.rows.length) {
+            throw new InvariantError("Lagu gagal dihapus")
+        }
+    }
 }
 
 module.exports = PlaylistSongService

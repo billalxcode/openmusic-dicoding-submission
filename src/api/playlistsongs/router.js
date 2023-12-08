@@ -10,6 +10,7 @@ class PlaylistSongRouter extends BaseRouter {
         this.setAuth("openmusic_jwt")
         this.get("/playlists/{playlistId}/songs", (r, h) => handler.getAllSongs(r, h))
         this.post("/playlists/{playlistId}/songs", (r, h) => handler.postSongHandler(r, h))
+        this.delete("/playlists/{playlistId}/songs", (r, h) => handler.deleteSongFromPlaylist(r, h))
         return this.router
     }
 }
