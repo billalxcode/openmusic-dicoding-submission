@@ -91,6 +91,19 @@ class PlaylistService {
             }
         })[0]
     }
+
+    async deletePlaylistById(playlistId) {
+        const query = new BaseQuery(
+            "DELETE FROM playlists WHERE id = $1 RETURNING id",
+            [
+                playlistId
+            ]
+        )
+        const result = await this._pool.query(query.raw())
+        if (!result.rows.length) {
+            throw new InvariantError("Playlist gagal dihapus")
+        }
+    }
 }
 
 module.exports = PlaylistService

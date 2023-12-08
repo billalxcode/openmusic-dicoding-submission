@@ -63,6 +63,25 @@ class PlaylistHandler {
         })
         return response
     }
+
+    /**
+     * 
+     * @param {Hapi.Request} request 
+     * @param {Hapi.ResponseToolkit} h 
+     */
+    async deletePlaylist(request, h) {
+        const { playlistId } = request.params
+        const { id: credentialId } = request.auth.credentials
+
+        await this._playlistService.verifyPlaylistAccess(playlistId, credentialId)
+        await this._playlistService.deletePlaylistById(playlistId)
+
+        const response = h.response({
+            status: "success",
+            message: "Playlist berhasil dihapus"
+        })
+        return response
+    }
 }
 
 module.exports = PlaylistHandler
