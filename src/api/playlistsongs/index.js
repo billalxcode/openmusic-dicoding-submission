@@ -13,12 +13,13 @@ module.exports = {
      */
     register: async (server, options) => {
         const handler = new PlaylistSongHandler(
-            options.playlistService,
+            options.playlistSongService,
             options.songService,
+            options.playlistService,
             options.validator
         )
         const router = new PlaylistSongRouter()
 
-        server.route(router.run())
+        server.route(router.run(handler))
     }
 }

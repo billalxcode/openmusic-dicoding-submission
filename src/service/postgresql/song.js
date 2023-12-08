@@ -11,6 +11,19 @@ class SongService {
         this._model = new SongModel()
     }
 
+    async verifySongId(songId) {
+        const query = new BaseQuery(
+            "SELECT * FROM songs WHERE id = $1",
+            [
+                songId
+            ]
+        )
+        const result = await this._pool.query(query.raw())
+        if (!result.rows.length) {
+            throw new NotFoundError("Song tidak ditemukan")
+        }
+    }
+
     async addSong({ title, year, performer, genre, duration, albumId }) {
         const created_at = new Date().toISOString()
 

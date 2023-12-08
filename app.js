@@ -7,6 +7,8 @@ const album = require("./src/api/album")
 const song = require("./src/api/song")
 const users = require("./src/api/users")
 const auth = require("./src/api/auth")
+const playlist = require("./src/api/playlist")
+const playlistsongs = require("./src/api/playlistsongs")
 
 // all services
 const AlbumService = require("./src/service/postgresql/album")
@@ -25,9 +27,10 @@ const ClientError = require("./src/exceptions/ClientError")
 
 // tokenize
 const TokenManager = require("./src/tokenize/TokenManager")
-const playlist = require("./src/api/playlist")
 const PlaylistService = require("./src/service/postgresql/playlist")
 const PlaylistValidator = require("./src/validator/playlist")
+const PlaylistSongValidator = require("./src/validator/playlistsongs")
+const PlaylistSongService = require("./src/service/postgresql/playlistsongs")
 
 class App {
     constructor() {
@@ -82,6 +85,15 @@ class App {
                     playlistService: new PlaylistService(),
                     userService: new UserService(),
                     validator: new PlaylistValidator()
+                }
+            },
+            {
+                plugin: playlistsongs,
+                options: {
+                    playlistSongService: new PlaylistSongService(),
+                    songService: new SongService(),
+                    playlistService: new PlaylistService(),
+                    validator: new PlaylistSongValidator()
                 }
             }
         ]

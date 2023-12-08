@@ -14,7 +14,7 @@ module.exports = {
     register: async(server, options) => {
         const handler = new PlaylistHandler(
             options.playlistService,
-            options.userService,
+            options.songService,
             options.validator
         )
         const router = new PlaylistRouter()

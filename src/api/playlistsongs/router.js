@@ -7,7 +7,8 @@ class PlaylistSongRouter extends BaseRouter {
      * @param {PlaylistSongHandler} handler 
      */
     run(handler) {
-        this.post("/playlists/{id}/songs", (r, h))
+        this.setAuth("openmusic_jwt")
+        this.post("/playlists/{playlistId}/songs", (r, h) => handler.postSongHandler(r, h))
         return this.router
     }
 }
