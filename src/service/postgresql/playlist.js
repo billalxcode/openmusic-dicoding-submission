@@ -73,6 +73,24 @@ class PlaylistService {
         const playlists = await this._pool.query(query.raw())
         return playlists.rows.map(this._model.mappingPlaylist)
     }
+
+    async getPlaylistById(playlistId, songs = []) {
+        const query = new BaseQuery(
+            "SELECT playlists.id, playlists.name, users.username FROM playlists LEFT JOIN users ON playlists.owner = users.id WHERE playlists.id = $1",
+            [
+                playlistId
+            ]
+        )
+        const playlists = await this._pool.query(query.raw())
+        return playlists.rows.map((data) => {
+            return {
+                id: data.id,
+                name: data.name,
+                username: data.username,
+                songs: songs
+            }
+        })[0]
+    }
 }
 
 module.exports = PlaylistService

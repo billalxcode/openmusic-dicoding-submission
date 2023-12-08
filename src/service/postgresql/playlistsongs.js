@@ -33,6 +33,26 @@ class PlaylistSongService {
         }
         return result.rows[0]
     }
+
+    async getAllSongs(playlistId) {
+        const query = new BaseQuery(
+            "SELECT playlistsongs.*, songs.title, songs.performer FROM playlistsongs LEFT JOIN songs ON songs.id = playlistsongs.song_id WHERE playlistsongs.playlist_id = $1",
+            [
+                playlistId
+            ]
+        )
+        const result = await this._pool.query(query.raw())
+        if (!result.rows.length) {
+            throw new NotFoundError("Playlist tidak ditemukan")
+        }
+        return result.rows.map((data) => {
+            return {
+                id: data.song_id,
+                title: data.title,
+                performer: data.performer
+            }
+        })
+    }
 }
 
 module.exports = PlaylistSongService

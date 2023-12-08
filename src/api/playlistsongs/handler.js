@@ -47,6 +47,29 @@ class PlaylistSongHandler {
         response.code(201)
         return response
     }
+
+    /**
+     * 
+     * @param {Hapi.Request} request 
+     * @param {Hapi.ResponseToolkit} h 
+     */
+    async getAllSongs(request, h) {
+        const { playlistId } = request.params
+        const { id: credentialId } = request.auth.credentials
+        
+        await this._playlistService.verifyPlaylistAccess(playlistId, credentialId)
+        const songs = await this._playlistSongService.getAllSongs(playlistId)
+        const playlist = await this._playlistService.getPlaylistById(playlistId, songs)
+        
+        const response = h.response({
+            status: "success",
+            message: "berhasil mengambil data lagu",
+            data: {
+                playlist
+            }
+        })
+        return response
+    }
 }
 
 module.exports = PlaylistSongHandler
