@@ -37,6 +37,7 @@ class PlaylistSongHandler {
         await this._playlistService.verifyPlaylistAccess(playlistId, credentialId)
         
         const playlistSongId = await this._playlistSongService.addSongPlaylist({ playlistId, songId })
+        await this._playlistSongService.saveActivity("add", {playlistId, songId, credentialId})
         const response = h.response({
             status: "success",
             message: "berhasil menambahkan lagu ke playlist",
@@ -84,7 +85,8 @@ class PlaylistSongHandler {
 
         await this._playlistService.verifyPlaylistAccess(playlistId, credentialId)
         await this._playlistSongService.deleteSong(playlistId, songId)
-
+        await this._playlistSongService.saveActivity("delete", {playlistId, songId, credentialId})
+        
         const response = h.response({
             status: "success",
             message: "Lagu berhasil dihapus dari playlist"

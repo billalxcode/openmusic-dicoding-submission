@@ -11,6 +11,27 @@ class PlaylistSongService {
         this.songService = new SongService()
     }
 
+    async saveActivity(action, { playlistId, songId, credentialId }) {
+        const activityId = nanoid()
+        const created_at = new Date().toISOString()
+
+        const query = new BaseQuery(
+            "INSERT INTO playlist_song_activities VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
+            [
+                "activity-" + activityId,
+                playlistId,
+                songId,
+                credentialId,
+                action,
+                created_at
+            ]
+        )
+        const result = await this._pool.query(query.raw())
+        if (!result.rows.length) {
+            throw new InvariantError("Tidak dapat menambahkan activity")
+        }
+    }
+
     async addSongPlaylist({ playlistId, songId }) {
         const created_at = new Date().toISOString()
         const playlistSongId = nanoid(16)
@@ -54,7 +75,7 @@ class PlaylistSongService {
         })
     }
     
-    async deleteSong(playlistId, songId) {
+    async deleteSong(playlistId, songId, credentialId) {
         const query = new BaseQuery(
             "DELETE FROM playlistsongs WHERE song_id = $2 AND playlist_id = $1 RETURNING id",
             [
@@ -62,7 +83,7 @@ class PlaylistSongService {
             ]
         )
         const result = await this._pool.query(query.raw())
-        console.log(result.rows)
+        
         if (!result.rows.length) {
             throw new InvariantError("Lagu gagal dihapus")
         }

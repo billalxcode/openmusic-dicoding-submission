@@ -11,6 +11,9 @@ class PlaylistRouter extends BaseRouter {
         this.get("/playlists", (r, h) => handler.getPlaylistsHandler(r, h))
         this.post("/playlists", (r, h) => handler.postPlaylistHandler(r, h))
         this.delete("/playlists/{playlistId}", (r, h) => handler.deletePlaylist(r, h))
+        
+        // get all activities
+        this.get("/playlists/{playlistId}/activities", (r, h) => handler.getPlaylistActivities(r, h))
         return this.router
     }
 }

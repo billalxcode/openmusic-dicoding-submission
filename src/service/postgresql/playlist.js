@@ -104,6 +104,24 @@ class PlaylistService {
             throw new InvariantError("Playlist gagal dihapus")
         }
     }
+
+    async getPlaylistActivities(playlistId) {
+        const query = new BaseQuery(
+            "SELECT username, title, action, time FROM playlist_song_activities LEFT JOIN songs ON playlist_song_activities.song_id = songs.id LEFT JOIN users ON playlist_song_activities.user_id = users.id WHERE playlist_id = $1",
+            [
+                playlistId
+            ]
+        )
+        const results = await this._pool.query(query.raw())
+        return results.rows.map((d) => {
+            return {
+                username: d.username,
+                title: d.title,
+                action: d.action,
+                time: d.time
+            }
+        })
+    }
 }
 
 module.exports = PlaylistService

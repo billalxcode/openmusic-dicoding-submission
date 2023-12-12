@@ -82,6 +82,27 @@ class PlaylistHandler {
         })
         return response
     }
+
+    /**
+     * 
+     * @param {Hapi.Request} request 
+     * @param {Hapi.ResponseToolkit} h 
+     */
+    async getPlaylistActivities(request, h) {
+        const { playlistId } = request.params
+        const { id: credentialId } = request.auth.credentials
+
+        await this._playlistService.verifyPlaylistAccess(playlistId, credentialId)
+        const activities = await this._playlistService.getPlaylistActivities(playlistId)
+        const response = h.response({
+            status: "success",
+            data: {
+                playlistId,
+                activities
+            }
+        })
+        return response
+    }
 }
 
 module.exports = PlaylistHandler
