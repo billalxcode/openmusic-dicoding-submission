@@ -52,20 +52,37 @@ class PlaylistService {
         }
     }
 
+    async verifyPlaylistCollaborator(playlistId, userId) {
+        const query = new BaseQuery(
+            "SELECT * FROM collaborations WHERE playlist_id = $1 AND user_id = $2",
+            [
+                playlistId, userId
+            ]
+        )
+        const result = await this._pool.query(query.raw())
+        if (!result.rows.length) {
+            throw new NotFoundError("Kolaborator gagal diverifikasi")
+        }
+    }
+
     async verifyPlaylistAccess(playlistId, credentialId) {
         try {
             await this.verifyPlaylistOwner(playlistId, credentialId)
         } catch (error) {
-            throw error
-            // if (error instanceof NotFoundError) {
-            //     throw error
-            // }
+            if (error instanceof NotFoundError) {
+                throw error
+            }
+            try {
+                await this.verifyPlaylistCollaborator(playlistId, credentialId)
+            } catch {
+                throw error
+            }
         }
     }
 
     async getPlaylists(owner) {
         const query = new BaseQuery(
-            "SELECT playlists.id, playlists.name, users.username FROM playlists LEFT JOIN users ON playlists.owner = users.id WHERE playlists.owner = $1",
+            "SELECT playlists.*, users.username FROM playlists LEFT JOIN collaborations ON collaborations.playlist_id = playlists.id LEFT JOIN users ON playlists.owner = users.id WHERE playlists.owner = $1 OR collaborations.user_id = $1 GROUP BY playlists.id, users.username",
             [
                 owner
             ]
@@ -74,11 +91,11 @@ class PlaylistService {
         return playlists.rows.map(this._model.mappingPlaylist)
     }
 
-    async getPlaylistById(playlistId, songs = []) {
+    async getPlaylistById(credentialId, songs = []) {
         const query = new BaseQuery(
-            "SELECT playlists.id, playlists.name, users.username FROM playlists LEFT JOIN users ON playlists.owner = users.id WHERE playlists.id = $1",
+            "SELECT playlists.*, users.username FROM playlists LEFT JOIN users ON users.id = playlists.owner WHERE playlists.id = $1",
             [
-                playlistId
+                credentialId
             ]
         )
         const playlists = await this._pool.query(query.raw())

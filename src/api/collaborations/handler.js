@@ -51,7 +51,7 @@ class CollaborationHandler {
         const { playlistId, userId } = request.payload
         const { id: credentialId } = request.auth.credentials
 
-        await this._playlistService.verifyPlaylistAccess(playlistId, credentialId)
+        await this._playlistService.verifyPlaylistOwner(playlistId, credentialId)
         await this._collaborationService.deleteColaborator({ playlistId, userId})
         
         const response = h.response({

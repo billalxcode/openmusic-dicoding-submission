@@ -4,7 +4,7 @@ const PlaylistRouter = require("./router")
 
 module.exports = {
     name: "playlist",
-    version: "1.0.0",
+    version: "1.1.0",
 
     /**
      * 
