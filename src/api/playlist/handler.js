@@ -39,7 +39,6 @@ class PlaylistHandler {
             status: "success",
             message: "Playlist berhasil dibuat",
             data: {
-
                 playlistId
             }
         })

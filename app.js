@@ -31,6 +31,9 @@ const PlaylistService = require("./src/service/postgresql/playlist")
 const PlaylistValidator = require("./src/validator/playlist")
 const PlaylistSongValidator = require("./src/validator/playlistsongs")
 const PlaylistSongService = require("./src/service/postgresql/playlistsongs")
+const collaborations = require("./src/api/collaborations")
+const CollaborationService = require("./src/service/postgresql/collaboration")
+const CollaborationValidator = require("./src/validator/collaboration")
 
 class App {
     constructor() {
@@ -94,6 +97,14 @@ class App {
                     songService: new SongService(),
                     playlistService: new PlaylistService(),
                     validator: new PlaylistSongValidator()
+                }
+            },
+            {
+                plugin: collaborations,
+                options: {
+                    collaborationService: new CollaborationService(),
+                    playlistService: new PlaylistService(),
+                    validator: new CollaborationValidator()
                 }
             }
         ]
