@@ -31,7 +31,6 @@ class CollaborationService {
             ]
         )
         const collaboration = await this._pool.query(query.raw())
-        console.log(collaboration.rows)
         if (!collaboration.rows[0].id) {
             throw new InvariantError("Collaborator gagal ditambahkan")
         }
